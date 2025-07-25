@@ -3,7 +3,9 @@
         "."
     ],
     "java.project.referencedLibraries": [
-        "lib\\mysql-connector-java-8.0.26.jar",
+        "lib\\junit-4.12.jar",
+        "c:\\Users\\Administrator\\Desktop\\JDBC\\lib\\hamcrest-core-1.1.jar",
         "c:\\Users\\Administrator\\Desktop\\JDBC\\lib\\mysql-connector-java-8.0.26.jar"
-    ]
+    ],
+    "java.format.settings.url": ".vscode/java-formatter.xml"
 }

@@ -61,6 +61,7 @@ public class main {
         //5.处理结果集
         try {
             while (resultSet.next()) {
+                // 获取每一列的数据，每一次的next()方法都会移动到查询表的下一行，但是不会得到数据
                 int id = resultSet.getInt("id_Staff");
                 String name = resultSet.getString("name_Staff");
                 double salary = resultSet.getDouble("salary_Staff");
@@ -68,7 +69,6 @@ public class main {
                 System.out.println(id + " | " + name + " | " + salary + " | " + age);
             }
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
