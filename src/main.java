@@ -1,3 +1,4 @@
+package src;
 import java.sql.Statement;
 import java.lang.Thread.State;
 import java.sql.Connection;
@@ -54,6 +55,8 @@ public class main {
             System.out.println("执行SQL查询失败！");
             e.printStackTrace();
         }
+
+
 
         //5.处理结果集
         try {
