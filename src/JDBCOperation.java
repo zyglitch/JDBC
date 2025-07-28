@@ -34,8 +34,7 @@ public class JDBCOperation {
         rs.close();
         pstmt.close();
         conn.close();
-
-
+            
     }
 }
 
