@@ -3,11 +3,15 @@ import java.sql.Statement;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.Scanner;
+
+import javax.sql.DataSource;
 
 import org.junit.Test;
 
 import java.beans.ParameterDescriptor;
+import java.io.InputStream;
 import java.lang.Thread.State;
 import java.sql.Connection;
 import java.sql.Driver;
@@ -62,8 +66,6 @@ public class JDBCAdvance {
     }   
 
 
-
-
     @Test
     //使用ORM的实现来封装对象和集合
     public void getAllORMdata () throws Exception{
@@ -108,7 +110,7 @@ public class JDBCAdvance {
     @Test 
     //测试返回主键回显
     //主要就是实现了添加了一个员工之后，可以知道这个添加的员工的ID在数据库中是多少，方便做一些操作
-    public void testreturnPK() throws Exception{
+    public void testReturnPK() throws Exception{
         //1.获取链接
         Connection conn = null;
         try{
@@ -132,11 +134,12 @@ public class JDBCAdvance {
         int rowsAffected = preparedStatement.executeUpdate();
 
         //5.处理结果
+        ResultSet generatedKeys = null;
         if(rowsAffected > 0){
             System.out.println("收到数据");
 
             //这个返回的是一个结果集，放的是单行单列
-            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+            generatedKeys = preparedStatement.getGeneratedKeys();
             if(generatedKeys.next()){
                 int newId = generatedKeys.getInt(1);//获取新插入的记录的ID
                 newPerson.setId(newId);//更新对象的ID属性
@@ -147,6 +150,10 @@ public class JDBCAdvance {
         }
 
         //6.关闭资源
+        if(generatedKeys != null){// 避免结果集是null时空指针异常
+            generatedKeys.close();
+        }
+
         preparedStatement.close();
         conn.close();
         
@@ -155,6 +162,94 @@ public class JDBCAdvance {
 
 
     }
+
+    @Test
+    //测试批量插入
+    //使用循环来实现插入的操作，好耗时很长
+    public void testMoreInsert() throws Exception{ 
+        //1.注册驱动，直接跳过
+
+        //2.获取连接
+        Connection connection = null;
+        try{
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", "123456");
+            System.out.println("获取连接成功！");
+        }catch(SQLException e){
+            System.out.println("获取连接失败！");
+            e.printStackTrace();
+        }
+
+        //3.获取执行sql语句的对象
+        String sql = "insert into staff values(null,'?',?,?)";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+        //4.设置参数并执行批量插入
+        for(int i = 0; i < 5; i++){
+            // 使用预处理语句设置参数
+            preparedStatement.setString(1, "测试名字" + i);
+            preparedStatement.setDouble(2, 100.0+i);
+            preparedStatement.setInt(3, 20+i);
+           
+            preparedStatement.executeUpdate(); // 执行插入
+        }
+
+        //6.关闭连接
+        preparedStatement.close();
+        connection.close();
+    }
+
+
+
+    @Test
+    //测试批量插入
+    //使用的批处理来实现插入的操作，效率更高
+    //注意：批处理的操作需要在连接数据库的URL后面追加?rewrite
+    public void testBatch() throws Exception{ 
+        //1.注册驱动，直接跳过
+
+        //2.获取连接
+        Connection connection = null;
+        try{
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/?testrewriteBatchedStatements=true", "root", "123456");
+            System.out.println("获取连接成功！");
+        }catch(SQLException e){
+            System.out.println("获取连接失败！");
+            e.printStackTrace();
+        }
+            /*
+                注意：1、必须在连接数据库的URL后面追加?rewriteBatchedStatements=true，允许批量操作(?这个要加在URL的最后面)
+                    2、新增SQL必须用values。且语句最后不要追加;结束
+                    3、调用addBatch()方法，将SQL语句进行批量添加操作
+                    4、统一执行批量操作，调用executeBatch()
+             */        
+
+        //3.获取执行sql语句的对象
+        String sql = "insert into staff values(null,'?',?,?)";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+        //4.设置参数并执行批量插入
+        for(int i = 0; i < 5; i++){
+            // 使用预处理语句设置参数
+            preparedStatement.setString(1, "测试名字" + i);
+            preparedStatement.setDouble(2, 100.0+i);
+            preparedStatement.setInt(3, 20+i);
+           
+            preparedStatement.addBatch();// 添加到批处理
+        }
+
+        //5.执行批量操作
+        preparedStatement.executeBatch();
+        System.out.println("批量插入成功！");
+
+        //6.释放资源
+        preparedStatement.close();
+        connection.close();
+        System.out.println("连接已关闭！");
+
+
+    }
+
+
 
 }
 
