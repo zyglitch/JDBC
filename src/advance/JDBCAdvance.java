@@ -1,20 +1,10 @@
 package src.advance;
 import java.sql.Statement;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import java.util.Scanner;
-
-import javax.sql.DataSource;
-
 import org.junit.Test;
-
-import java.beans.ParameterDescriptor;
-import java.io.InputStream;
-import java.lang.Thread.State;
 import java.sql.Connection;
-import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -105,6 +95,10 @@ public class JDBCAdvance {
             while(!personList.isEmpty()){
                 System.out.println(personList.remove(0));
             }
+
+            statement.close();
+            conection.close();
+            scanner.close();
     }
 
     @Test 

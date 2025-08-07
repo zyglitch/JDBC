@@ -1,11 +1,6 @@
 package src;
-import java.sql.Statement;
-import java.text.ParseException;
 import java.util.Scanner;
-import java.beans.ParameterDescriptor;
-import java.lang.Thread.State;
 import java.sql.Connection;
-import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -65,7 +60,7 @@ public class JDBCPrepared {
                 System.out.println(id_Staff + " | " + name_Staff + " | " + salary_Staff + " | " + age_Staff);
             }
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
+            // Auto-generated catch block
             e.printStackTrace();
         }
 
@@ -73,6 +68,7 @@ public class JDBCPrepared {
         resultSet.close();
         preparedStatement.close();
         connection.close();
+        scanner.close();
 
     }
 

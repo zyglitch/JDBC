@@ -2,6 +2,9 @@
     "java.project.sourcePaths": [
         "."
     ],
+    "java.project.resourcePaths": [
+        "resources"
+    ],
     "java.project.referencedLibraries": [
         "lib\\druid-1.2.9.jar",
         "c:\\Users\\Administrator\\Desktop\\JDBC\\lib\\hamcrest-core-1.1.jar",

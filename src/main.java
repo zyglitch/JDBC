@@ -1,12 +1,9 @@
 package src;
 import java.sql.Statement;
-import java.lang.Thread.State;
 import java.sql.Connection;
-import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 
 public class main {
     
